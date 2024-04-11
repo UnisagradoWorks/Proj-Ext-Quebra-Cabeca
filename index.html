@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Página Principal</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="css/image-puzzle.css" rel="stylesheet" />
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/jquery-ui.js"></script>
+    <script src="js/image-puzzle.js"></script>
 </head>
 <body>
     <header>
@@ -21,11 +25,95 @@
     </header>
 
     <main>
-        <h1></h1>
+        <div id="collage">
+            <div id="playPanel" style="padding:5px;display:none;">
+                <div style="display:inline-block; margin:auto; width:95%; vertical-align:top;">
+                    <div id="actualImageBox">
+                        <div id="stepBox">
+                            <div>Tentativas:</div><div class="stepCount">0</div>
+                        </div>
+                        <img id="actualImage" />
+                        <div>Você deverá recriar a imagem acima.</div>
+                        <p id="levelPanel">
+                            <input type="radio" name="level" id="hard" checked="checked" value="3" /> <label for="hard">Imagem</label>
+                        </p>
+                    </div>
+                    <div id="sortable" class="sortable"></div>
+                </div>
+            </div>
+            <div id="gameOver" style="display:none;">
+                <script>
+                    clearTimeout(t);
+                </script>
+                <div style=" padding: 5px 10px 20px 10px; text-align: center; ">
+                    <h2 style="text-align:center">Você perdeu!!</h2>
+                    Parabéns!! <br /> Você completou a imagem!!
+                    <br />
+                    em <span class="stepCount">0</span> tentativas.
+                    <br /><br />
+                </div>
+            </div>
+        </div>
+        <div style=" background: #000; color:#eee; padding:10px; text-align:center;"><h1><time>00:00:00</time></h1></div>
     </main>
 
     <footer class="footer">
         <p>Todos os direitos reservados</p>
     </footer>
+
+    <script>
+        var images = [
+            { src: 'images/london-bridge.jpg' },
+            { src: 'images/lotus-temple.jpg' },
+            { src: 'images/qutub-minar.jpg'},
+            { src: 'images/statue-of-liberty.jpg' },
+            { src: 'images/taj-mahal.jpg' }
+        ];
+
+        $(function () {
+            var gridSize = $('#levelPanel :radio:checked').val();
+            imagePuzzle.startGame(images, gridSize);
+            $('#newPhoto').click(function () {
+                imagePuzzle.startGame(images, gridSize);
+            });
+
+            $('#levelPanel :radio').change(function (e) {
+                var gridSize = $(this).val();
+                imagePuzzle.startGame(images, gridSize);
+            });
+        });
+
+        var h1 = document.getElementsByTagName('h1')[0],
+            start = document.getElementById('start'),
+            stop = document.getElementById('stop'),
+            clear = document.getElementById('clear'),
+            seconds = 0, minutes = 0, hours = 0,
+            t;
+
+        function add() {
+            seconds++;
+            if (seconds >= 60) {
+                seconds = 0;
+                minutes++;
+                if (minutes >= 60) {
+                    minutes = 0;
+                    hours++;
+                }
+            }
+            
+            h1.textContent = (hours ? (hours > 9 ? hours : "0" + hours) : "00") + ":" + (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":" + (seconds > 9 ? seconds : "0" + seconds);
+
+            timer();
+        }
+        function timer() {
+            t = setTimeout(add, 1000);
+        }
+        timer();
+
+        /* Stop button */
+        stop.onclick = function() {
+            // Your stop button logic here
+        }
+    </script>
 </body>
 </html>
